@@ -19,7 +19,7 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +86,7 @@ body::before {
 }
 
 section {
-  --section-height: calc(100vh - 2cm);
+  --section-height: calc(100dvh - 2cm);
   min-height: var(--section-height);
   width: 100%;
   margin: 0 1.4cm;
@@ -232,7 +232,7 @@ section .title {
 
 /* Main Section */
 
-section#main .me {
+section .me {
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -248,11 +248,11 @@ section#main .me {
   justify-content: center;
 }
 
-section#main .me * {
+section .me * {
   z-index: 100;
 }
 
-section#main .me .avatar::before {
+section .me .avatar::before {
   content: "";
   position: absolute;
   width: 220px;
@@ -265,7 +265,7 @@ section#main .me .avatar::before {
   z-index: 1;
 }
 
-section#main .me .avatar {
+section .me .avatar {
   width: 220px;
   height: 220px;
   border: 5px solid rgba(251, 248, 239, 0.5);
@@ -273,7 +273,7 @@ section#main .me .avatar {
   z-index: 2;
 }
 
-section#main .me .info {
+section .me .info {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -283,26 +283,26 @@ section#main .me .info {
   line-height: 40px;
 }
 
-section#main .me .info p:nth-of-type(1) {
+section .me .info p:nth-of-type(1) {
   font-size: 2rem;
   font-weight: 400;
   letter-spacing: 1px;
 }
 
-section#main .me .info p:nth-of-type(2) {
+section .me .info p:nth-of-type(2) {
   font-size: 2.7rem;
   font-weight: 500;
   letter-spacing: 2px;
   margin-bottom: 8px;
 }
 
-section#main .me .info p:nth-of-type(3) {
+section .me .info p:nth-of-type(3) {
   font-size: 1.52rem;
   font-weight: 400;
   letter-spacing: 1px;
 }
 
-section#main .me .links {
+section .me .links {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -311,12 +311,12 @@ section#main .me .links {
   margin-top: 20px;
 }
 
-section#main .me .links img {
+section .me .links img {
   height: 25px;
   width: 25px;
 }
 
-section#main .me .links a {
+section .me .links a {
   background: #fff;
   border-radius: 20px;
   padding: 7px;
@@ -332,7 +332,7 @@ section#main .me .links a {
   transition: 350ms width, 350ms color;
 }
 
-section#main .me .email {
+section .me .email {
   position: absolute;
   margin: 20px;
   bottom: 0;
@@ -354,7 +354,7 @@ section#main .me .email {
   line-height: 35px;
 }
 
-section#main .me .star1 {
+section .me .star1 {
   position: absolute;
   top: -70px;
   right: -62px;
@@ -363,7 +363,7 @@ section#main .me .star1 {
   z-index: 0;
 }
 
-section#main .me .star2 {
+section .me .star2 {
   position: absolute;
   bottom: -45px;
   left: -55px;
@@ -372,46 +372,9 @@ section#main .me .star2 {
   z-index: 0;
 }
 
-section#main .aboutme {
+section .aboutme {
   width: 100%;
   padding: 20px 30px;
-}
-
-section#main .aboutme h1 {
-  font-family: var(--text-font);
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.36px;
-}
-
-section#main .aboutme .skills {
-  display: grid;
-  margin-top: 15px;
-  gap: 20px;
-  align-items: center;
-  align-content: center;
-  grid-template-rows: 1fr;
-  grid-template-columns: repeat(3, auto) 100%;
-}
-
-section#main .aboutme .skills .skill {
-  width: 80px;
-  height: 80px;
-  border-radius: 15px;
-  border: var(--border-color) 1px solid;
-  background-image: var(--icon);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 50px 50px;
-}
-
-section#main .aboutme .skills .skill.skill-va {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: xx-large;
-  width: 50%;
 }
 
 .bg-effect {
@@ -447,6 +410,73 @@ section#main .aboutme .skills .skill.skill-va {
   filter: blur(50px);
 }
 
+/* Main Buttons */
+
+#sec-buttons {
+  background-color: rgba(255, 0, 0, 0.042);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+}
+
+#sec-buttons button:nth-of-type(1) {
+  grid-column: 1 / span 2;
+}
+
+#sec-buttons button {
+  position: relative;
+  --size: calc(1vw + 80px);
+  appearance: none;
+  padding: 20px 30px;
+  background-color: none;
+}
+
+#sec-buttons button .images {
+  width: 100%;
+}
+
+#sec-buttons button .images div {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: var(--size);
+  width: calc(var(--size) * 2);
+  background-image: var(--url);
+  background-size: cover;
+  background-position: center;
+  border-radius: 15px;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0px 0px 15px -5px rgba(0, 0, 0, 0.3);
+}
+
+#sec-buttons button .images div:nth-of-type(1) {
+  translate: 20px 0;
+}
+#sec-buttons button .images div:nth-of-type(2) {
+  translate: 80px 0;
+}
+#sec-buttons button .images div:nth-of-type(3) {
+  translate: 140px 0;
+}
+
+
+#sec-buttons button svg {
+  height: var(--size);
+  width: var(--size);
+  stroke: var(--primary-color);
+}
+
+#sec-buttons button .title {
+  margin-top: 10px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
 @media (max-width: 768px) {
   section {
     margin: 1cm 0.4cm;
@@ -460,11 +490,15 @@ section#main .aboutme .skills .skill.skill-va {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   section > .content {
     flex-direction: column;
   }
-  section#main .me {
+  section .me {
     max-width: unset;
   }
+  section {
+    margin: 1cm 1.4cm;
+  }
+  
 }
