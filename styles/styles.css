@@ -1,11 +1,14 @@
 :root {
-  --primary-color: rgb(71, 132, 146);
-  --primary-linear: linear-gradient(180deg, #54a6b7 0%, #38606c 100%);
+  --primary-color: rgb(83, 172, 192);
+  --primary-color-rgb: 71, 132, 146;
+  --primary-linear: linear-gradient(180deg, #51a2b2 0%, #3a6876 100%);
   --background-color: #f5f5f5;
   --text-color: #1a1e22;
   --title-font: "ClashDisplay-Variable";
   --text-font: "Switzer-Variable";
   --border-color: rgba(0, 0, 0, 0.3);
+  --gold-color-rgb: rgb(194, 167, 13);
+  --gold-color-rgb: 194, 167, 13;
 }
 
 * {
@@ -413,7 +416,6 @@ section .aboutme {
 /* Main Buttons */
 
 #sec-buttons {
-  background-color: rgba(255, 0, 0, 0.042);
   width: 100%;
   height: 100%;
   display: grid;
@@ -428,14 +430,70 @@ section .aboutme {
 
 #sec-buttons button {
   position: relative;
-  --size: calc(1vw + 80px);
+  --size: calc(3vw + 30px);
   appearance: none;
   padding: 20px 30px;
-  background-color: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: transparent;
+  border: 3px solid rgb(var(--primary-color-rgb), 0.5);
+  border-radius: 15px;
+  background-color: #d8edff1a;
+  overflow: hidden;
+}
+
+#sec-buttons button::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 0px;
+  height: 0px;
+  border-radius: 50%;
+  box-shadow: 0 0 0px 20px var(--primary-color),
+    0 0 0px 40px var(--primary-color),
+    0 0 0px 60px var(--primary-color),
+    0 0 0px 80px var(--primary-color);
+  filter: blur(50px) brightness(1.3);
+  transform: translateZ(0);
+}
+
+#sec-buttons button::after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 0px;
+  height: 0px;
+  border-radius: 50%;
+  box-shadow: 0 0 0px 20px var(--primary-color),
+    0 0 0px 40px var(--primary-color),
+    0 0 0px 60px var(--primary-color),
+    0 0 0px 80px var(--primary-color);
+  filter: blur(50px) brightness(1.1);
+  transform: translateZ(0);
+}
+
+#sec-buttons button#page-Achievements::after, #sec-buttons button#page-Achievements::before {
+  --primary-color: rgba(var(--gold-color-rgb), 0.5);
+}
+
+
+#sec-buttons button#page-Achievements {
+  border-color: rgba(var(--gold-color-rgb), 0.5);
 }
 
 #sec-buttons button .images {
-  width: 100%;
+  position: relative;
+  width: calc(var(--size) * 2);
+  height: var(--size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #sec-buttons button .images div {
@@ -451,23 +509,35 @@ section .aboutme {
   border-radius: 15px;
   border: 2px solid var(--primary-color);
   box-shadow: 0px 0px 15px -5px rgba(0, 0, 0, 0.3);
+  transition: all 1s ease;
 }
 
 #sec-buttons button .images div:nth-of-type(1) {
-  translate: 20px 0;
+  translate: -30px 0;
 }
 #sec-buttons button .images div:nth-of-type(2) {
-  translate: 80px 0;
+  translate: 0px 0;
+  z-index: 10;
 }
 #sec-buttons button .images div:nth-of-type(3) {
-  translate: 140px 0;
+  translate: 30px 0;
 }
 
+#sec-buttons button .images div:not(.selected) {
+  filter: blur(1px);
+  transform: scale(0.8);
+  opacity: 0.8;
+}
 
 #sec-buttons button svg {
   height: var(--size);
   width: var(--size);
   stroke: var(--primary-color);
+}
+
+#sec-buttons button img {
+  height: calc(var(--size) * 2);
+  width: calc(var(--size) * 2);
 }
 
 #sec-buttons button .title {
@@ -500,5 +570,14 @@ section .aboutme {
   section {
     margin: 1cm 1.4cm;
   }
-  
+}
+
+@media (max-width: 1224px) {
+  section .aboutme {
+    width: 100%;
+    padding: 20px;
+  }
+  section {
+    margin: 1cm;
+  }
 }
