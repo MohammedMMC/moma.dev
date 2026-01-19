@@ -253,10 +253,10 @@ section .title {
 section .me {
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: 50%;
   max-width: 450px;
   background-image: var(--primary-linear);
-  min-height: var(--section-height);
+  min-height: 650px;
   border-right: 1px solid var(--border-color);
   padding-top: 1cm;
   display: flex;
@@ -350,6 +350,13 @@ section .me .links a {
   transition:
     350ms width,
     350ms color;
+}
+
+section .me .links a span {
+  background-image: var(--primary-linear);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 section .me .email {
@@ -447,7 +454,7 @@ section .aboutme {
 
 #sec-buttons button {
   position: relative;
-  --size: calc(3vw + 30px);
+  --size: calc(2vw + 50px);
   appearance: none;
   padding: 20px 30px;
   display: flex;
@@ -640,14 +647,14 @@ section .aboutme {
 }
 
 #sec-buttons button .images div:nth-of-type(1) {
-  translate: -40px 0;
+  translate: min(calc(-15px - 2vw), -30px) 0;
 }
 #sec-buttons button .images div:nth-of-type(2) {
   translate: 0px 0;
   z-index: 10;
 }
 #sec-buttons button .images div:nth-of-type(3) {
-  translate: 40px 0;
+  translate: max(calc(15px + 2vw), 30px) 0;
 }
 
 #sec-buttons button .images div:not(.selected) {
@@ -681,6 +688,32 @@ section .aboutme {
   font-size: 1.4rem;
   font-weight: 500;
   color: var(--text-color);
+  width: max-content;
+}
+
+@media (max-width: 1224px) {
+  section .aboutme {
+    width: 100%;
+    padding: 20px;
+  }
+  section {
+    margin: 1cm;
+  }
+}
+
+@media (max-width: 1024px) {
+  section .me {
+    width: 100%;
+  }
+  section > .content {
+    flex-direction: column;
+  }
+  section .me {
+    max-width: unset;
+  }
+  section {
+    margin: 1cm 1.4cm;
+  }
 }
 
 @media (max-width: 768px) {
@@ -694,26 +727,21 @@ section .aboutme {
     --w-ms1: 240px;
     --w-ms2: 75px;
   }
-}
-
-@media (max-width: 1024px) {
-  section > .content {
-    flex-direction: column;
-  }
-  section .me {
-    max-width: unset;
-  }
-  section {
-    margin: 1cm 1.4cm;
+  #sec-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 1224px) {
-  section .aboutme {
-    width: 100%;
-    padding: 20px;
-  }
+@media (max-width: 480px) {
   section {
-    margin: 1cm;
+    margin: 0.4cm 0.4cm;
+  }
+  #sec-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  #sec-buttons button .title {
+    font-size: large;
   }
 }
