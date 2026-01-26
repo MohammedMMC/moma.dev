@@ -17,6 +17,12 @@ document.querySelectorAll("section#main .me .links a").forEach((link) => {
 const secButtonsPage = document.getElementById("sec-buttons");
 const footer = document.querySelector("footer");
 
+document.addEventListener("DOMContentLoaded", () => {
+  const hashPage = window.location.hash.replace("#", "");
+
+  document.getElementById(hashPage).click();
+});
+
 secButtonsPage.querySelectorAll("button").forEach((button) => {
   button.addEventListener("click", () => {
     const pageToShow = button.id;
@@ -30,6 +36,7 @@ secButtonsPage.querySelectorAll("button").forEach((button) => {
       if (page.getAttribute("--data-ps") == pageToShow) {
         page.classList.add("active");
         changePage(page, true, { w: true });
+        window.location.hash = pageToShow;
       } else {
         page.classList.remove("active");
         changePage(page, false);
@@ -47,6 +54,7 @@ document.querySelectorAll(".page-back").forEach((backBtn) => {
 
     changePage(secButtonsPage, true, { d: "grid", w: true });
     footer.style.display = "none";
+    window.location.hash = "";
   });
 });
 
@@ -82,7 +90,7 @@ function changePage(page, status, dataBE) {
 
       setTimeout(() => {
         page.style.display = data.d ? data.d : "none";
-      }, 490);
+      }, 480);
     }, data.w ? 500 : 0);
 
   }
