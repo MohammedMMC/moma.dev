@@ -1,6 +1,9 @@
 :root {
-  --primary-color: rgb(83, 172, 192);
+  /* --primary-color: rgb(83, 172, 192); */
+  --primary-color: rgb(71, 132, 146);
   --primary-color-rgb: 71, 132, 146;
+  --star1-color: #56b7c6;
+  --star2-color: #45848e;
   --primary-linear: linear-gradient(180deg, #51a2b2 0%, #3a6876 100%);
   --background-color: #f5f5f5;
   --text-color: #1a1e22;
@@ -98,9 +101,9 @@ body::before {
 }
 
 footer {
+  display: none;
   text-align: center;
   height: 40px;
-  display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(var(--primary-color-rgb), 0.4);
@@ -171,6 +174,12 @@ section.title-left > .title {
   position: absolute;
   top: 0;
   left: 8px;
+  
+  filter: drop-shadow(2px 2px 2px rgb(var(--primary-color-rgb), 0.5));
+  background-image: var(--primary-linear);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 section.title-left-ss > .content {
@@ -400,6 +409,7 @@ section .me .star1 {
   width: 380px;
   height: 380px;
   z-index: 0;
+  fill: var(--star1-color);
 }
 
 section .me .star2 {
@@ -409,6 +419,7 @@ section .me .star2 {
   width: 290px;
   height: 290px;
   z-index: 0;
+  fill: var(--star2-color);
 }
 
 section .aboutme {
@@ -427,26 +438,28 @@ section .aboutme {
   z-index: -1;
   content: "";
   position: absolute;
-  top: -70px;
-  left: -70px;
-  width: 300px;
-  height: 300px;
+  top: -100px;
+  left: -100px;
+  width: 350px;
+  height: 250px;
   background-color: var(--bg-effect-color, rgb(218, 237, 255));
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(40px);
+  opacity: 0.6;
 }
 
 .bg-effect::after {
   z-index: -1;
   content: "";
   position: absolute;
-  bottom: -70px;
-  right: -70px;
-  width: 300px;
-  height: 300px;
+  bottom: -100px;
+  right: -100px;
+  width: 350px;
+  height: 250px;
   background-color: var(--bg-effect-color, rgb(218, 237, 255));
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(40px);
+  opacity: 0.8;
 }
 
 /* Main Buttons */
@@ -743,6 +756,19 @@ section .aboutme {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
+
+  /* Page - Services */
+  .services ul,
+  .services .service-title a {
+    display: none !important;
+  }
+  .services .service > a {
+    display: block !important;
+  }
+  .services .service {
+    display: flex !important;
+    flex-direction: column !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -755,5 +781,9 @@ section .aboutme {
   }
   #sec-buttons button .title {
     font-size: large;
+  }
+  .services {
+    display: flex !important;
+    flex-direction: column !important;
   }
 }

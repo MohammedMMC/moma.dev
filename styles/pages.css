@@ -1,9 +1,6 @@
 .page {
   width: 100%;
   height: calc(100% - 20px);
-}
-
-.page:not(:nth-of-type(1)) {
   display: none;
 }
 
@@ -79,9 +76,13 @@ button {
 
 /* Page - Services */
 .services {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
+}
+
+.services .service:nth-child(1) {
+  grid-column: 1 / 2 span;
 }
 
 .services .service {
@@ -92,6 +93,11 @@ button {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+}
+
+.services .service:not(:has(ul)) {
+  display: flex;
+  flex-direction: column;
 }
 
 .services .service ul {
@@ -124,6 +130,7 @@ button {
   font-weight: 600;
   letter-spacing: 0.64px;
   color: var(--btn-color);
+  line-height: normal;
 }
 
 .services .service .service-title img {
@@ -133,4 +140,13 @@ button {
 
 .services .service .service-title a {
   margin-left: auto;
+}
+
+.services .service a {
+  margin-top: auto;
+  text-align: center;
+}
+
+.services .service:has(ul) > a {
+  display: none;
 }
