@@ -174,7 +174,7 @@ section.title-left > .title {
   position: absolute;
   top: 0;
   left: 8px;
-  
+
   filter: drop-shadow(2px 2px 2px rgb(var(--primary-color-rgb), 0.5));
   background-image: var(--primary-linear);
   background-clip: text;
@@ -768,6 +768,13 @@ section .aboutme {
   .services .service {
     display: flex !important;
     flex-direction: column !important;
+  }
+
+  .achievements .achievement .text span {
+    padding-bottom: unset !important;
+  }
+  .achievements .achievement .text p {
+    font-size: large !important;
   }
 }
 
