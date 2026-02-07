@@ -20,7 +20,7 @@ const footer = document.querySelector("footer");
 document.addEventListener("DOMContentLoaded", () => {
   const hashPage = window.location.hash.replace("#", "");
 
-  document.getElementById(hashPage).click();
+  document.getElementById(hashPage)?.click();
 });
 
 secButtonsPage.querySelectorAll("button").forEach((button) => {
