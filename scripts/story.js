@@ -1,3 +1,6 @@
+const dialogBox = document.querySelector(".story-mode .dialog");
+const dialogText = dialogBox.querySelector(".text");
+
 /**
  * @type {HTMLCanvasElement}
  */
@@ -60,6 +63,17 @@ function runAudio(filename, volume = 0.5, rate = 1) {
     source.start();
 }
 
+async function chat(text) {
+    dialogText.textContent = "";
+    for (let i1 = 0; i1 < text.split(" ").length; i1++) {
+        say(text.split(" ")[i1]);
+        for (let i2 = 0; i2 < text.split(" ")[i1].length; i2++) {
+            dialogText.textContent += text.split(" ")[i1][i2];
+            await new Promise(r => setTimeout(r, 100));
+        }
+        dialogText.textContent += " ";
+    }
+}
 
 function loadAssets() {
     // Set the source for each image
@@ -85,6 +99,7 @@ let currentFrame = 0;
 let currentAnimation = "idle";
 let lastFrameTime = 0;
 let frameSpeed = 100;
+let reverseAnimation = false;
 let momaPosition = { x: 0, y: 0 };
 
 function start() {
@@ -98,11 +113,10 @@ function animate(timestamp) {
     if (timestamp - lastFrameTime < frameSpeed) return;
     lastFrameTime = timestamp;
 
-    
     let img = MOMA_IMAGES[currentAnimation].image;
-    
+
     if (currentAnimation === "walking") walkToThePage();
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img,
         currentFrame * 64, 0,
@@ -110,30 +124,52 @@ function animate(timestamp) {
         momaPosition.x, momaPosition.y,
         64, 64
     );
-    
-    currentFrame++;
-    if (MOMA_IMAGES[currentAnimation].frames <= currentFrame) currentFrame = 0;
+
+    if (reverseAnimation) {
+        if (currentFrame > 0) currentFrame--;
+        if (currentFrame <= 0) {
+            reverseAnimation = false;
+            currentAnimation = "idle";
+        }
+    } else {
+        currentFrame++;
+        if (MOMA_IMAGES[currentAnimation].frames <= currentFrame) currentFrame = 0;
+    }
 }
 
 
 window.onclick = async () => {
     frameSpeed = 250;
-    currentAnimation = "walking";
     currentFrame = 0;
-    
-    // await new Promise(r => setTimeout(r, 1000));
+    currentAnimation = "walking";
+    await new Promise(r => setTimeout(r, 250 * MOMA_IMAGES.walking.frames));
+    frameSpeed = 100;
+    currentFrame = 0;
+    currentAnimation = "gtoWaving";
+    await new Promise(r => setTimeout(r, 100 * MOMA_IMAGES.gtoWaving.frames));
+    currentFrame = 0;
+    currentAnimation = "waving";
+    dialogBox.style.animation = "showDialog 0.5s forwards";
+    await new Promise(r => setTimeout(r, 300));
+    await chat("Hello There!");
+    await new Promise(r => setTimeout(r, 3000));
+
+    currentAnimation = "gtoWaving";
+    currentFrame = MOMA_IMAGES[currentAnimation].frames - 3;
+    reverseAnimation = true;
+
 }
 
 function walkToThePage() {
     if (currentFrame === 0) momaPosition.x = 32;
 
     if (momaPosition.x > 0) momaPosition.x -= 32 / MOMA_IMAGES[currentAnimation].frames;
-    if (currentFrame % 2 === 1) runAudio("step", 0.3, 0.9 + Math.random() * 0.2);
+    if (currentFrame % 2 === 0) runAudio("step", 0.3, 0.9 + Math.random() * 0.2);
 
-    if (currentFrame === MOMA_IMAGES[currentAnimation].frames - 1) {
+    if (currentFrame >= MOMA_IMAGES[currentAnimation].frames - 1) {
         momaPosition.x = 0;
-        currentAnimation = "idle";
         frameSpeed = 100;
+        currentAnimation = "idle";
     }
 }
 
