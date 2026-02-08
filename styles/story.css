@@ -16,11 +16,18 @@
   width: 100%;
   z-index: 1000;
   overflow: hidden;
+  display: none;
+}
+
+.story-mode *:not(button) {
+  user-select: none;
+  pointer-events: none;
 }
 
 .story-mode.wbg {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
+  display: block !important;
 }
 
 body:has(.story-mode.wbg),
@@ -28,17 +35,19 @@ html:has(.story-mode.wbg) {
   overflow: hidden;
 }
 
-.story-mode .moma {
+.story-mode #moma {
   position: absolute;
   bottom: 0;
   right: -80px;
   height: 50vh;
   width: auto;
+  aspect-ratio: 1 / 1;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
 .story-mode .dialog {
+  opacity: 0;
   position: absolute;
   bottom: calc(50vh - 80px);
   right: 180px;
