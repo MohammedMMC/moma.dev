@@ -6,6 +6,10 @@ let ctx = canvas.getContext("2d");
 canvas.width = 64;
 canvas.height = 64;
 
+
+const A = new (window.AudioContext || webkitAudioContext)();
+let Audios = {};
+
 ctx.imageSmoothingEnabled = false;
 ctx.webkitImageSmoothingEnabled = false;
 ctx.mozImageSmoothingEnabled = false;
@@ -23,7 +27,41 @@ const MOMA_IMAGES = {
     talking2: { image: new Image(), frames: 1 },
 };
 
-function loadImages() {
+["mi", "mo", "ma", "step"].forEach(k =>
+    fetch("/sounds/" + k + ".wav")
+        .then(r => r.arrayBuffer())
+        .then(b => A.decodeAudioData(b))
+        .then(b => Audios[k] = b)
+);
+
+const V = c => /[aei]/i.test(c) ? "mi" : /[ou]/i.test(c) ? "mo" : "ma";
+function say(text) {
+    let wordIndex = 0;
+    const interval = setInterval(() => {
+        const words = text.split(" ");
+
+        const char = words[wordIndex++];
+        if (char) runAudio(V(char[0]), 0.5, 0.85 + Math.random() * 0.1);
+
+        if (wordIndex >= words.length) clearInterval(interval);
+
+    }, 300);
+};
+
+function runAudio(filename, volume = 0.5, rate = 1) {
+    const source = A.createBufferSource();
+    const gain = A.createGain();
+
+    source.buffer = Audios[filename];
+    source.playbackRate.value = rate;
+    gain.gain.value = volume;
+
+    source.connect(gain).connect(A.destination);
+    source.start();
+}
+
+
+function loadAssets() {
     // Set the source for each image
     Object.keys(MOMA_IMAGES).forEach((key) => {
         let img = MOMA_IMAGES[key];
@@ -45,33 +83,59 @@ function loadImages() {
 
 let currentFrame = 0;
 let currentAnimation = "idle";
+let lastFrameTime = 0;
+let frameSpeed = 100;
+let momaPosition = { x: 0, y: 0 };
 
 function start() {
     animate();
 }
 
-let lastFrameTime = 0;
 
 function animate(timestamp) {
     requestAnimationFrame(animate);
 
-    if (timestamp - lastFrameTime < 100) return;
+    if (timestamp - lastFrameTime < frameSpeed) return;
     lastFrameTime = timestamp;
 
-    if (MOMA_IMAGES[currentAnimation].frames <= currentFrame) currentFrame = 0;
-
+    
     let img = MOMA_IMAGES[currentAnimation].image;
-
+    
+    if (currentAnimation === "walking") walkToThePage();
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img,
         currentFrame * 64, 0,
         64, 64,
-        0, 0,
+        momaPosition.x, momaPosition.y,
         64, 64
     );
-
+    
     currentFrame++;
+    if (MOMA_IMAGES[currentAnimation].frames <= currentFrame) currentFrame = 0;
 }
 
 
-loadImages();
+window.onclick = async () => {
+    frameSpeed = 250;
+    currentAnimation = "walking";
+    currentFrame = 0;
+    
+    // await new Promise(r => setTimeout(r, 1000));
+}
+
+function walkToThePage() {
+    if (currentFrame === 0) momaPosition.x = 32;
+
+    if (momaPosition.x > 0) momaPosition.x -= 32 / MOMA_IMAGES[currentAnimation].frames;
+    if (currentFrame % 2 === 1) runAudio("step", 0.3, 0.9 + Math.random() * 0.2);
+
+    if (currentFrame === MOMA_IMAGES[currentAnimation].frames - 1) {
+        momaPosition.x = 0;
+        currentAnimation = "idle";
+        frameSpeed = 100;
+    }
+}
+
+
+loadAssets();
