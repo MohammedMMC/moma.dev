@@ -19,11 +19,6 @@
   display: none;
 }
 
-.story-mode *:not(button) {
-  user-select: none;
-  pointer-events: none;
-}
-
 .story-mode.wbg {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
@@ -51,6 +46,7 @@ html:has(.story-mode.wbg) {
   position: absolute;
   bottom: calc(50vh - 65px);
   right: 140px;
+  margin-left: 10px;
   padding: 5px 10px;
   background-color: transparent;
   image-rendering: pixelated;
@@ -60,21 +56,6 @@ html:has(.story-mode.wbg) {
   border-image-source: url("/images-ext/aseprite/dialog-bg.png");
   border-image-slice: 2 fill;
   border-image-repeat: repeat;
-}
-
-@keyframes showDialog {
-  from {
-    opacity: 0;
-    scale: 0;
-    right: 60px;
-    bottom: calc(50vh - 180px);
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-    right: 140px;
-    bottom: calc(50vh - 65px);
-  }
 }
 
 .story-mode .dialog::after {
@@ -97,4 +78,59 @@ html:has(.story-mode.wbg) {
   color: black;
   max-width: 380px;
   font-size: clamp(1.5rem, 2vw, 2.5rem);
+  word-spacing: -3px;
+  
+  user-select: none;
+  pointer-events: none;
+}
+
+.story-mode .options {
+  height: 0px;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.story-mode .options button {
+  font-family: "pixel", "04b_03", sans-serif;
+  outline: none;
+  appearance: none;
+  font-size: clamp(1.5rem, 1.8vw, 2rem);
+  color: black;
+  letter-spacing: 1px;
+  padding: 3px 6px;
+  background: transparent;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-style: solid;
+  border-width: 10px;
+  border-image-source: url("/images-ext/aseprite/dialog-bg.png");
+  border-image-slice: 2 fill;
+  border-image-repeat: repeat;
+  cursor: pointer !important;
+}
+
+@keyframes showOptions {
+  from {
+    height: 0px;
+  }
+  to {
+    height: 55px;
+  }
+}
+
+@keyframes showDialog {
+  from {
+    opacity: 0;
+    scale: 0;
+    right: 60px;
+    bottom: calc(50vh - 180px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    right: 140px;
+    bottom: calc(50vh - 65px);
+  }
 }
