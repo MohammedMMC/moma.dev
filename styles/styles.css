@@ -7,6 +7,7 @@
   --primary-linear: linear-gradient(180deg, #51a2b2 0%, #3a6876 100%);
   --background-color: #f5f5f5;
   --text-color: #1a1e22;
+  --subtext-color: #1a1e22e4;
   --title-font: "ClashDisplay-Variable";
   --text-font: "Switzer-Variable";
   --border-color: rgba(0, 0, 0, 0.3);
@@ -722,7 +723,14 @@ section .aboutme {
     padding: 20px;
   }
   section {
-    margin: 1cm;
+    margin: 0 1cm;
+  }
+}
+
+@media (max-width: 1124px) {
+  .projects,
+  .certificates {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
@@ -775,6 +783,17 @@ section .aboutme {
   }
   .achievements .achievement .text p {
     font-size: large !important;
+  }
+}
+
+@media (max-width: 624px) {
+  .projects,
+  .certificates {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+  .projects .project .image,
+  .certificates .certificate .image {
+    height: 120px !important;
   }
 }
 

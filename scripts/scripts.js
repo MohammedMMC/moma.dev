@@ -97,3 +97,24 @@ function changePage(page, status, dataBE) {
 
   }
 }
+
+
+// Calculate Max Height for Pages
+
+let maxHeight = document.getElementById("sec-buttons").clientHeight;
+function calculateMaxHeight() {
+  let currentPage = document.querySelector(".page.active");
+  if (!currentPage) return "unset";
+  let pageNavHeight = currentPage.querySelector(".p-nav")?.clientHeight || 0;
+
+  return maxHeight - pageNavHeight - 80 + "px";
+}
+
+setInterval(() => {
+  document.querySelectorAll(".page.active div:nth-of-type(2)").forEach(async (page) => {
+    if (window.innerWidth > 1024) {
+      let newHeight = calculateMaxHeight();
+      if (page.style.maxHeight !== newHeight) { page.style.maxHeight = newHeight; }
+    }
+  });
+}, 1);

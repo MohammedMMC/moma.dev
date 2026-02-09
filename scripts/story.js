@@ -413,6 +413,8 @@ const storyParts = {
         await storyParts.cancel_show_around(true);
     },
     startStory: async () => {
+        storyMode.classList.add("wbg");
+
         await storyParts.join_wave();
         let showAround = await storyParts.start_questioning_show_around();
         if (!showAround) return;
