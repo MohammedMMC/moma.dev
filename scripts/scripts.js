@@ -111,7 +111,7 @@ function calculateMaxHeight() {
 }
 
 setInterval(() => {
-  document.querySelectorAll(".page.active div:nth-of-type(2)").forEach(async (page) => {
+  document.querySelectorAll(".page.active > div:nth-of-type(2)").forEach(async (page) => {
     if (window.innerWidth > 1024) {
       let newHeight = calculateMaxHeight();
       if (page.style.maxHeight !== newHeight) { page.style.maxHeight = newHeight; }
