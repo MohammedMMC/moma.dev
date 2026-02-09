@@ -169,7 +169,7 @@ const storyParts = {
         frameSpeed = 250;
         currentFrame = 0;
         currentAnimation = "walking";
-        await sleep(250 * MOMA_IMAGES.walking.frames);
+        await sleep(280 * MOMA_IMAGES.walking.frames);
         frameSpeed = 100;
         currentFrame = 0;
         currentAnimation = "gtoWaving";
@@ -185,6 +185,9 @@ const storyParts = {
         currentFrame = MOMA_IMAGES[currentAnimation].frames - 3;
         reverseAnimation = true;
         await sleep(100 * MOMA_IMAGES.gtoWaving.frames / 2);
+
+        await chat("I am MoMa, your guide!");
+        await sleep(300);
     },
     ask_show_around: async (again) => {
         await chat(`${again ? "So" : "Do"} you want me to show you around?`);
@@ -215,6 +218,8 @@ const storyParts = {
         await sleep(250 * MOMA_IMAGES.walking.frames / 2);
 
         dialogBox.style.animation = "hideDialog 0.5s forwards";
+        await sleep(300);
+        storyMode.classList.remove("wbg");
     },
     start_questioning_show_around: async (again) => {
         if (await storyParts.ask_show_around(again)) {
@@ -269,7 +274,7 @@ const storyParts = {
             storyMode.style.setProperty("--wbg-width", `calc(100% - (${document.querySelector(".aboutme").clientWidth}px + ${getComputedStyle(document.querySelector("section")).marginRight} - 10px))`);
         }
 
-        await chat("And here are all the pages you can explore!");
+        await chat("And here are all the pages we can explore!");
         await sleep(1000);
 
         if (window.innerWidth > 1024) {
@@ -297,7 +302,7 @@ const storyParts = {
         await sleep(500);
         window.scrollTo({ top: document.querySelector(".aboutme").offsetTop - 20, behavior: "smooth" });
         await chat("Here you can see all the services I offer!");
-        await sleep(400);
+        await sleep(1000);
         await chat("Take your time exploring!", true, false);
         await sleep(1000);
         await chat("");
@@ -315,16 +320,14 @@ const storyParts = {
         document.getElementById("page-Achievements").click();
         await sleep(500);
 
-        await chat("Here you can see all the achivements I have unlocked in my life! :D");
+        await chat("Here you can see all the achivements I have unlocked in my life!");
         await sleep(1000);
-        await chat("If the place I was in had been better for me, I could have made even better achievements! :'D");
-        await sleep(2500);
+        await chat("If the place I was in had been better for me, I could have made even better achievements! :')");
+        await sleep(2000);
         await chat("");
 
         dialogOptions.classList.add("ctn");
         dialogOptions.style.animation = "showOptions 0.5s forwards";
-
-        await sleep(500);
 
         if (window.innerWidth < 1024) {
             storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px))`;
@@ -335,6 +338,53 @@ const storyParts = {
         await sleep(400);
         dialogOptions.classList.remove("ctn");
 
+
+        await chat("Finally, Lets show you my projects!");
+        await sleep(400);
+        document.getElementById("page-Projects").click();
+        await sleep(500);
+
+        await chat("Here you can see all the projects I have worked on!");
+        await sleep(1000);
+        await chat("Take your time exploring!", true, false);
+        await sleep(1000);
+        await chat("");
+
+        dialogOptions.classList.add("ctn");
+        dialogOptions.style.animation = "showOptions 0.5s forwards";
+
+        await buttonClick();
+        dialogOptions.style.animation = "hideOptions 0.5s forwards";
+        await sleep(400);
+        dialogOptions.classList.remove("ctn");
+
+
+        storyMode.style.transform = `unset`;
+        storyMode.style.scale = "1";
+
+        await chat("I think you got a good look around!");
+        await sleep(400);
+        document.querySelectorAll(".page-back")[0].click();
+        await sleep(500);
+
+        await chat("I hope you liked the tour and the website style!");
+        await sleep(200);
+        await chat("And I'm very happy if you contact me to start a project together!", true, false);
+        await sleep(1500);
+        await chat("I will leave you now, do what ever you want <3");
+        await sleep(200);
+
+        dialogOptions.querySelector("button:nth-of-type(3)").textContent = "Bye!";
+
+        dialogOptions.classList.add("ctn");
+        dialogOptions.style.animation = "showOptions 0.5s forwards";
+
+        await buttonClick();
+        dialogOptions.style.animation = "hideOptions 0.5s forwards";
+        await sleep(400);
+        dialogOptions.classList.remove("ctn");
+
+        await storyParts.cancel_show_around();
     }
 }
 
@@ -352,10 +402,10 @@ window.onclick = async () => {
     fc = true;
 
     await storyParts.join_wave();
-    // let showAround = await storyParts.start_questioning_show_around();
-    // if (!showAround) return;
+    let showAround = await storyParts.start_questioning_show_around();
+    if (!showAround) return;
 
-    // document.querySelectorAll(".page-back")[0].click();
+    document.querySelectorAll(".page-back")[0].click();
 
     await storyParts.show_around();
 
@@ -364,10 +414,12 @@ window.onclick = async () => {
 function walkToThePage() {
     if (currentFrame === 0) momaPosition.x = reverseAnimation ? 0 : 32;
 
-    if (momaPosition.x > 0) {
-        if (reverseAnimation) {
+    if (reverseAnimation) {
+        if (momaPosition.x < 36) {
             momaPosition.x += 32 / MOMA_IMAGES[currentAnimation].frames;
-        } else {
+        }
+    } else {
+        if (momaPosition.x > 0) {
             momaPosition.x -= 32 / MOMA_IMAGES[currentAnimation].frames;
         }
     }

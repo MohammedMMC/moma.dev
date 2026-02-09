@@ -19,7 +19,9 @@
   display: block;
   pointer-events: none;
 
-  transition: scale 0.5s ease, transform 0.5s ease;
+  transition:
+    scale 0.5s ease,
+    transform 0.5s ease;
 
   --wbg-width: 100%;
   --wbg-height: 100%;
@@ -34,9 +36,12 @@
   width: var(--wbg-width);
   height: var(--wbg-height);
   pointer-events: auto;
-  transition: width 0.5s ease, height 0.5s ease, transform 0.5s ease;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease,
+    transform 0.5s ease;
   transform: var(--wbg-transform);
-  
+
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
 }
@@ -49,7 +54,7 @@ html:has(.story-mode.wbg) {
 .story-mode #moma {
   position: absolute;
   bottom: 0;
-  right: -80px;
+  right: calc(50vh / -3.5);
   height: 50vh;
   width: auto;
   aspect-ratio: 1 / 1;

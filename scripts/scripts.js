@@ -37,6 +37,7 @@ secButtonsPage.querySelectorAll("button").forEach((button) => {
         page.classList.add("active");
         changePage(page, true, { w: true });
         window.location.hash = pageToShow;
+        setTimeout(() => window.scrollTo({ top: document.querySelector(".aboutme").offsetTop - 20, behavior: "smooth" }), 500);
       } else {
         page.classList.remove("active");
         changePage(page, false);
@@ -55,13 +56,14 @@ document.querySelectorAll(".page-back").forEach((backBtn) => {
     changePage(secButtonsPage, true, { d: "grid", w: true });
     footer.style.display = "none";
     window.location.hash = "";
+    setTimeout(() => window.scrollTo({ top: document.querySelector(".aboutme").offsetTop - 20, behavior: "smooth" }), 500);
   });
 });
 
 /**
  * @param {HTMLElement} page 
  * @param {boolean} status 
- * @param {w} status 
+ * @param {Object} dataBE 
  */
 function changePage(page, status, dataBE) {
   let data = { d: dataBE?.d, w: dataBE?.w || false };
