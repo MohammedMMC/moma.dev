@@ -1,4 +1,5 @@
-const dialogBox = document.querySelector(".story-mode .dialog");
+const storyMode = document.querySelector(".story-mode");
+const dialogBox = storyMode.querySelector(".dialog");
 const dialogText = dialogBox.querySelector(".text");
 const dialogOptions = dialogBox.querySelector(".options");
 
@@ -64,12 +65,12 @@ function runAudio(filename, volume = 0.5, rate = 1) {
     source.start();
 }
 
-async function chat(text, withAnimation = true) {
-    dialogText.textContent = "";
+async function chat(text, withAnimation = true, clear = true) {
+    if (clear) dialogText.innerHTML = ""; else dialogText.innerHTML += "<br>";
     for (let i1 = 0; i1 < text.split(" ").length; i1++) {
         say(text.split(" ")[i1]);
         for (let i2 = 0; i2 < text.split(" ")[i1].length; i2++) {
-            dialogText.textContent += text.split(" ")[i1][i2];
+            dialogText.innerHTML += text.split(" ")[i1][i2];
 
             if (withAnimation) {
                 currentAnimation = "talking" + (i2 % 2 + 1);
@@ -80,7 +81,7 @@ async function chat(text, withAnimation = true) {
 
             await new Promise(r => setTimeout(r, 100));
         }
-        dialogText.textContent += " ";
+        dialogText.innerHTML += " ";
     }
 }
 
@@ -195,7 +196,7 @@ const storyParts = {
         return (await buttonClick()) == "Yes";
     },
     ask_cancel_sure: async () => {
-        dialogOptions.style.animation = "showOptions 0.5s reverse forwards";
+        dialogOptions.style.animation = "hideOptions 0.5s forwards";
         await chat("Are you sure??");
         currentFrame = 0;
         currentAnimation = "crying";
@@ -211,14 +212,15 @@ const storyParts = {
         reverseAnimation = true;
         await new Promise(r => setTimeout(r, 250 * MOMA_IMAGES.walking.frames / 2));
 
-        dialogBox.style.animation = "showDialog 0.5s reverse forwards";
+        dialogBox.style.animation = "hideDialog 0.5s forwards";
     },
     start_questioning_show_around: async (again) => {
         if (await storyParts.ask_show_around(again)) {
+            dialogOptions.style.animation = "hideOptions 0.5s forwards";
             return true;
         } else {
             let btnClk2 = await storyParts.ask_cancel_sure();
-            dialogOptions.style.animation = "showOptions 0.5s reverse forwards";
+            dialogOptions.style.animation = "hideOptions 0.5s forwards";
 
             if (btnClk2) {
                 await storyParts.cancel_show_around();
@@ -228,7 +230,32 @@ const storyParts = {
             }
         }
     },
-    show_around: async () => { }
+    show_around: async () => {
+        await chat("Great!");
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        await new Promise(r => setTimeout(r, 500));
+
+        // show the main section that have my info and links to my socials
+        if (window.innerWidth < 1024) {
+            storyMode.style.setProperty("--wbg-height", "0px");
+        } else {
+            storyMode.style.setProperty("--wbg-width", `calc(100% - (${document.querySelector("section .me").clientWidth}px + ${getComputedStyle(document.querySelector("section")).marginLeft} + 10px))`);
+        }
+
+        await chat(`Here ${window.innerWidth > 1024 ? "on the left side" : ""} you can see my photo with my social links!`);
+
+        if (window.innerWidth < 1024) {
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px))`;
+            storyMode.style.scale = "0.5";
+        }
+
+        await new Promise(r => setTimeout(r, 3000));
+
+
+
+    },
+
 }
 
 let fc = false;
@@ -237,13 +264,10 @@ window.onclick = async () => {
     fc = true;
 
     await storyParts.join_wave();
-    let showAround = await storyParts.start_questioning_show_around();
-    if (!showAround) return;
-    
+    // let showAround = await storyParts.start_questioning_show_around();
+    // if (!showAround) return;
+
     await storyParts.show_around();
-
-    // Show AROUND THE PAGE
-
 
 }
 

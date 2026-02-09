@@ -16,13 +16,29 @@
   width: 100%;
   z-index: 1000;
   overflow: hidden;
-  display: none;
+  display: block;
+  pointer-events: none;
+
+  transition: scale 0.5s ease, transform 0.5s ease;
+
+  --wbg-width: 100%;
+  --wbg-height: 100%;
+  --wbg-transform: unset;
 }
 
-.story-mode.wbg {
+.story-mode.wbg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--wbg-width);
+  height: var(--wbg-height);
+  pointer-events: auto;
+  transition: width 0.5s ease, height 0.5s ease, transform 0.5s ease;
+  transform: var(--wbg-transform);
+  
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
-  display: block !important;
 }
 
 body:has(.story-mode.wbg),
@@ -79,7 +95,9 @@ html:has(.story-mode.wbg) {
   max-width: 380px;
   font-size: clamp(1.5rem, 2vw, 2.5rem);
   word-spacing: -3px;
-  
+
+  line-height: normal;
+
   user-select: none;
   pointer-events: none;
 }
@@ -119,7 +137,14 @@ html:has(.story-mode.wbg) {
     height: 55px;
   }
 }
-
+@keyframes hideOptions {
+  from {
+    height: 55px;
+  }
+  to {
+    height: 0px;
+  }
+}
 @keyframes showDialog {
   from {
     opacity: 0;
@@ -132,5 +157,19 @@ html:has(.story-mode.wbg) {
     scale: 1;
     right: 140px;
     bottom: calc(50vh - 65px);
+  }
+}
+@keyframes hideDialog {
+  from {
+    opacity: 1;
+    scale: 1;
+    right: 140px;
+    bottom: calc(50vh - 65px);
+  }
+  to {
+    opacity: 0;
+    scale: 0;
+    right: 60px;
+    bottom: calc(50vh - 180px);
   }
 }
