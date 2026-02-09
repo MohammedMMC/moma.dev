@@ -1,4 +1,5 @@
 const storyMode = document.querySelector(".story-mode");
+const smModal = document.querySelector(".sm-modal");
 const dialogBox = storyMode.querySelector(".dialog");
 const dialogText = dialogBox.querySelector(".text");
 const dialogOptions = dialogBox.querySelector(".options");
@@ -122,13 +123,19 @@ let currentAnimation = "idle";
 let lastFrameTime = 0;
 let frameSpeed = 100;
 let reverseAnimation = false;
-let momaPosition = { x: 0, y: 0 };
+let momaPosition = { x: 36, y: 0 };
 
 function start() {
     animate();
 }
 
 setInterval(() => {
+    if (dialogOptions.clientHeight < 2) {
+        dialogOptions.style.marginTop = "unset";
+    } else if (dialogText.textContent.length > 1) {
+        dialogOptions.style.marginTop = "";
+    }
+    
     if (currentAnimation === "crying" && currentFrame !== 0) {
         runAudio("mi", 0.4 / currentFrame, 0.9 + Math.random() * 0.2);
     }
@@ -189,8 +196,8 @@ const storyParts = {
         await chat("I am MoMa, your guide!");
         await sleep(300);
     },
-    ask_show_around: async (again) => {
-        await chat(`${again ? "So" : "Do"} you want me to show you around?`);
+    ask_show_around: async (again = false) => {
+        await chat(`${again ? "So" : "Do"} you want me to show you around?`, true, again);
 
         if (again) {
             currentFrame = 0;
@@ -208,8 +215,8 @@ const storyParts = {
         dialogOptions.style.animation = "showOptions 0.5s forwards";
         return (await buttonClick()) === "Yes";
     },
-    cancel_show_around: async () => {
-        await chat("Ok bye...");
+    cancel_show_around: async (isTourFinished) => {
+        await chat(isTourFinished ? "Cya!" : "Ok bye...");
 
         frameSpeed = 250;
         currentFrame = MOMA_IMAGES.walking.frames - 1;
@@ -220,6 +227,8 @@ const storyParts = {
         dialogBox.style.animation = "hideDialog 0.5s forwards";
         await sleep(300);
         storyMode.classList.remove("wbg");
+
+        if (isTourFinished) setCookie("storyModeDone", "y-" + String(isTourFinished));
     },
     start_questioning_show_around: async (again) => {
         if (await storyParts.ask_show_around(again)) {
@@ -256,7 +265,7 @@ const storyParts = {
         await sleep(500);
 
         if (window.innerWidth < 1024) {
-            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px))`;
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
             storyMode.style.scale = "0.5";
         }
 
@@ -330,7 +339,8 @@ const storyParts = {
         dialogOptions.style.animation = "showOptions 0.5s forwards";
 
         if (window.innerWidth < 1024) {
-            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px))`;
+            await sleep(500);
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
         }
 
         await buttonClick();
@@ -340,18 +350,34 @@ const storyParts = {
 
 
         await chat("Finally, Lets show you my projects!");
+        if (window.innerWidth < 1024) {
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
+        }
+
         await sleep(400);
         document.getElementById("page-Projects").click();
         await sleep(500);
 
         await chat("Here you can see all the projects I have worked on!");
+        if (window.innerWidth < 1024) {
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
+        }
+
         await sleep(1000);
         await chat("Take your time exploring!", true, false);
+        if (window.innerWidth < 1024) {
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
+        }
+
         await sleep(1000);
         await chat("");
 
         dialogOptions.classList.add("ctn");
         dialogOptions.style.animation = "showOptions 0.5s forwards";
+        if (window.innerWidth < 1024) {
+            await sleep(500);
+            storyMode.style.transform = `translate(50%, calc(-100% + ${dialogBox.clientHeight}px - 20px))`;
+        }
 
         await buttonClick();
         dialogOptions.style.animation = "hideOptions 0.5s forwards";
@@ -384,31 +410,58 @@ const storyParts = {
         await sleep(400);
         dialogOptions.classList.remove("ctn");
 
-        await storyParts.cancel_show_around();
+        await storyParts.cancel_show_around(true);
+    },
+    startStory: async () => {
+        await storyParts.join_wave();
+        let showAround = await storyParts.start_questioning_show_around();
+        if (!showAround) return;
+
+        document.querySelectorAll(".page-back")[0].click();
+
+        await storyParts.show_around();
     }
 }
 
-setInterval(() => {
-    if (dialogOptions.clientHeight < 2) {
-        dialogOptions.style.marginTop = "unset";
-    } else if (dialogText.textContent.length > 1) {
-        dialogOptions.style.marginTop = "";
+window.onload = async () => {
+    let storyModeRejectedTimes = parseInt(getCookie("storyModeRejectedTimes", "0"));
+    let storyModeDone = getCookie("storyModeDone", "n");
+
+    if (storyModeRejectedTimes >= 3) return;
+
+    if (storyModeDone.startsWith("y")) {
+        // ask if want story again
+        smModal.classList.remove("hidden"); // TEMP - NEEDS CHANGE
+    } else {
+        smModal.classList.remove("hidden");
     }
-}, 500);
 
-let fc = false;
-window.onclick = async () => {
-    if (fc) return;
-    fc = true;
+    smModal.querySelectorAll("button").forEach((b, i) => {
+        if (i === 0) {
+            b.onclick = () => {
+                smModal.classList.add("hidden");
+                storyMode.classList.remove("hidden");
+                storyParts.startStory();
+            }
+        } else {
+            b.onclick = () => {
+                smModal.classList.add("hidden");
+                setCookie("storyModeRejectedTimes", String(storyModeRejectedTimes + 1));
+            }
+        }
+    });
+}
 
-    await storyParts.join_wave();
-    let showAround = await storyParts.start_questioning_show_around();
-    if (!showAround) return;
-
-    document.querySelectorAll(".page-back")[0].click();
-
-    await storyParts.show_around();
-
+function getCookie(name, defaultValue = null) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return defaultValue;
+}
+function setCookie(name, value, days = 7) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
 }
 
 function walkToThePage() {
@@ -440,6 +493,5 @@ function walkToThePage() {
         }
     }
 }
-
 
 loadAssets();
