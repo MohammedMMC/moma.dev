@@ -334,6 +334,7 @@ button {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 5px;
+  margin-top: auto;
 }
 
 .projects .project ul li {
@@ -358,6 +359,9 @@ button {
   letter-spacing: 0.64px;
   font-weight: 500;
   padding: 8px 5px;
-  margin-top: auto;
   --btn-color: var(--project-color, var(--primary-color));
+}
+
+.certificates .certificate a {
+  margin-top: auto;
 }
