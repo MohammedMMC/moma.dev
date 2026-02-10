@@ -356,6 +356,8 @@ button {
   flex-wrap: wrap;
   gap: 5px;
   margin-top: auto;
+  padding-top: 5px;
+  margin-bottom: 10px;
 }
 
 .projects .project ul li {
@@ -368,8 +370,6 @@ button {
   color: var(--subtext-color);
   font-size: x-small;
   border-radius: 6px;
-  margin-top: 5px;
-  margin-bottom: 10px;
   font-weight: 500;
 }
 

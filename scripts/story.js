@@ -135,7 +135,7 @@ setInterval(() => {
     } else if (dialogText.textContent.length > 1) {
         dialogOptions.style.marginTop = "";
     }
-    
+
     if (currentAnimation === "crying" && currentFrame !== 0) {
         runAudio("mi", 0.4 / currentFrame, 0.9 + Math.random() * 0.2);
     }
@@ -422,6 +422,57 @@ const storyParts = {
         document.querySelectorAll(".page-back")[0].click();
 
         await storyParts.show_around();
+    },
+    ask_start_story_again: async () => {
+        storyMode.classList.remove("hidden");
+        storyMode.style.scale = "0.5";
+        storyMode.style.transform = `translate(50%, 50%)`;
+
+        frameSpeed = 250;
+        currentFrame = 0;
+        currentAnimation = "walking";
+        await sleep(280 * MOMA_IMAGES.walking.frames);
+        frameSpeed = 100;
+        currentFrame = 0;
+        currentAnimation = "gtoWaving";
+        await sleep(100 * MOMA_IMAGES.gtoWaving.frames);
+        currentFrame = 0;
+        currentAnimation = "waving";
+        dialogBox.style.animation = "showDialog 0.5s forwards";
+        await sleep(300);
+        await chat("Hello !", false);
+        await sleep(1000);
+        currentAnimation = "gtoWaving";
+        currentFrame = MOMA_IMAGES[currentAnimation].frames - 3;
+        reverseAnimation = true;
+        await sleep(100 * MOMA_IMAGES.gtoWaving.frames / 2);
+
+        await chat("Tour again?", true, false);
+        dialogOptions.style.animation = "showOptions 0.5s forwards";
+        let tourAgain = (await buttonClick()) == "Yes";
+        dialogOptions.style.animation = "hideOptions 0.5s forwards";
+        await sleep(400);
+        return tourAgain;
+    },
+    start_story_again: async (isTourFinished) => {
+        await chat("Ok :D");
+
+        frameSpeed = 250;
+        currentFrame = MOMA_IMAGES.walking.frames - 1;
+        currentAnimation = "walking";
+        reverseAnimation = true;
+        await sleep(250 * MOMA_IMAGES.walking.frames / 2);
+
+        dialogBox.style.animation = "hideDialog 0.5s forwards";
+        await sleep(1500);
+
+        storyMode.style.transform = `unset`;
+        storyMode.style.scale = "1";
+        await sleep(500);
+
+        smModal.classList.add("hidden");
+        storyMode.classList.remove("hidden");
+        storyParts.startStory();
     }
 }
 
@@ -432,8 +483,15 @@ window.onload = async () => {
     if (storyModeRejectedTimes >= 3) return;
 
     if (storyModeDone.startsWith("y")) {
-        // ask if want story again
-        smModal.classList.remove("hidden"); // TEMP - NEEDS CHANGE
+        await new Promise(resolve => {
+            window.addEventListener("click", resolve, { once: true });
+            window.addEventListener("touchstart", resolve, { once: true });
+        });
+        if (await storyParts.ask_start_story_again()) {
+            storyParts.start_story_again();
+        } else {
+            storyParts.cancel_show_around();
+        }
     } else {
         smModal.classList.remove("hidden");
     }
