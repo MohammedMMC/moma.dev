@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moma.dev/sitemap.xml
